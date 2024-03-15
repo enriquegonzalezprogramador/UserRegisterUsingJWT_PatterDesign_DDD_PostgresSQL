@@ -42,6 +42,14 @@ class UserServiceImpl extends UserService  {
       throw new Error('Error deleting user: ' + error.message);
     }
   }
+
+  async getUserByUsername(username){
+    try {
+      return await UserRepositoryImpl.getUserByUsername(username);
+    } catch (error) {
+      throw new Error('Error retrieving user by username: ' + error.message);
+    }
+  }
 }
 
 module.exports = new UserServiceImpl();

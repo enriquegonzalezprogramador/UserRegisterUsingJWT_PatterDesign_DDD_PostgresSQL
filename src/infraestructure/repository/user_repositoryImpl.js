@@ -32,6 +32,12 @@ class UserRepositoryImpl extends UserRepository {
     const queryText = 'DELETE FROM users WHERE id = $1';
     await db.query(queryText, [id]);
   }
+
+  async getUserByUsername(username) {
+    const queryText = 'SELECT * FROM users WHERE username = $1';
+    const { rows } = await db.query(queryText, [username]);
+    return rows[0];
+  }
 }
 
 module.exports = new UserRepositoryImpl();

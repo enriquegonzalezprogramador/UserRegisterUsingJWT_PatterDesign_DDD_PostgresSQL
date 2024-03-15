@@ -8,6 +8,8 @@ class UserRepository {
     async updateUser(id, user) {}
   
     async deleteUser(id) {}
+
+    async getUserByUsername(username) {}
   }
   
   module.exports = UserRepository;

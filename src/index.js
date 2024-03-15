@@ -1,15 +1,18 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const userRoutes = require('./routes/user_routes');
 const db = require('./infraestructure/db');
+const jwtRoutes = require('./routes/jwt_routes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
+
 
 // Configuración de las rutas
 app.use('/users', userRoutes);
+
+app.use('/jwt', jwtRoutes); 
 
 // Conexión a la base de datos
 db.pool.connect()
