@@ -3,8 +3,7 @@ const bcrypt = require('bcryptjs');
 const helpers = {};
 
 helpers.encryptPassword = async (password) =>{
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(password, salt);
+    const hash = await bcrypt.hash(password, 10);
     return hash;
 };
 helpers.matchPassword = async (password, savedPassword)=>{

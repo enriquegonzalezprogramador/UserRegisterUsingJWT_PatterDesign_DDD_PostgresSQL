@@ -1,14 +1,12 @@
 class User {
-    constructor(id, username, email, password) {
-      this.id = id;
+    constructor(username, email, password) {
+
       this.username = username;
       this.email = email;
       this.password = password;
     }
   
-    getId() {
-      return this.id;
-    }
+ 
   
     getUsername() {
       return this.username;
@@ -22,9 +20,7 @@ class User {
       return this.password;
     }
   
-    setId(id) {
-      this.id = id;
-    }
+  
   
     setUsername(username) {
       this.username = username;

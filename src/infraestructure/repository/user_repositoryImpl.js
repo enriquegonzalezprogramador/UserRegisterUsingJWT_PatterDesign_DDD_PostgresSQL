@@ -1,5 +1,6 @@
 const db = require('../db');
 const UserRepository = require('../../domain/repository/user_repository');
+const bcrypt = require('../../utils/bcrypt');
 
 class UserRepositoryImpl extends UserRepository {
   async getAllUsers() {
@@ -15,9 +16,12 @@ class UserRepositoryImpl extends UserRepository {
   }
 
   async createUser(user) {
+    let password_encrypted;
     const { username, email, password } = user;
+    password_encrypted = await bcrypt.encryptPassword(password);
+
     const queryText = 'INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *';
-    const { rows } = await db.query(queryText, [username, email, password]);
+    const { rows } = await db.query(queryText, [username, email, password_encrypted]);
     return rows[0];
   }
 
