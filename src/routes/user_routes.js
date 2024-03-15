@@ -1,17 +1,42 @@
 const express = require('express');
 const router = express.Router();
 const UserService = require('../infraestructure/service/user_serviceImpl');
+const { verifyToken } = require('../utils/jwt');
+
 
 router.get('/', async (req, res) => {
-  try {
-    const users = await UserService.getAllUsers();
-    res.json(users);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
+    try {
+      const users = await UserService.getAllUsers();
+      res.json(users);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  });
 
-router.get('/:id', async (req, res) => {
+// Middleware para proteger las rutas con autenticación JWT
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    
+    if (token == null) {
+      return res.sendStatus(401);
+    }
+    
+    try {
+      const decodedToken = verifyToken(token);
+      req.user = decodedToken;
+      next();
+    } catch (error) {
+      res.sendStatus(403);
+    }
+  }
+  
+  // Aplica el middleware de autenticación JWT a todas las rutas de user_routes.js
+  //router.use(authenticateToken);
+
+
+
+router.get('/:id',authenticateToken,   async (req, res) => {
   try {
     const user = await UserService.getUserById(req.params.id);
     if (user) {
@@ -35,7 +60,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id',authenticateToken, async (req, res) => {
   try {
     const id = req.params.id;
     const updatedUser = await UserService.updateUser(id, req.body);
@@ -45,7 +70,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id',authenticateToken, async (req, res) => {
   try {
     const id = req.params.id;
     await UserService.deleteUser(id);
